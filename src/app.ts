@@ -9,9 +9,7 @@ const server = createServer(app);
 app.use(cors());
 app.use(express.json());
 
-app.get("/hello-worlds", (req, res) => {
-  log.debug("This is a debug message");
-
+app.get("/health", (req, res) => {
   res.send("Hello, World!");
 });
 
