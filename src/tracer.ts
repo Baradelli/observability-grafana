@@ -1,14 +1,22 @@
 import { NodeSDK } from "@opentelemetry/sdk-node";
 
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import {
+  MeterProvider,
+  PeriodicExportingMetricReader,
+} from "@opentelemetry/sdk-metrics";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
-import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
+import {
+  diag,
+  DiagConsoleLogger,
+  DiagLogLevel,
+  metrics,
+} from "@opentelemetry/api";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
 
 const SERVICE_NAME = "app-rocketseat";
@@ -32,10 +40,16 @@ diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
 
 const sdk = new NodeSDK({
   traceExporter,
-  metricReader,
   instrumentations: [getNodeAutoInstrumentations()],
   resource: mergedResource,
   serviceName: SERVICE_NAME,
 });
 
-export default sdk;
+//! melhor ter criado isso em outro arquivo
+const meterProvider = new MeterProvider({
+  resource: mergedResource,
+  readers: [metricReader],
+});
+metrics.setGlobalMeterProvider(meterProvider);
+
+export { sdk, metrics };

@@ -1,4 +1,5 @@
-import sdk from "./tracer";
+// !melhor essa configuração ser uma lib padrão para todas as aplicações
+import { sdk } from "./tracer";
 sdk.start();
 
 import app from "./app";
