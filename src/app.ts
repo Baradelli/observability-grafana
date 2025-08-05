@@ -19,8 +19,13 @@ app.get("/health", (req, res) => {
 
 app.get("/metric-test", (req, res) => {
   const metric = metrics.getMeter("app-rocketseat");
+  // ! COUNTER criar _total
   const errorMetric = metric.createCounter("hello-error");
   errorMetric.add(1);
+
+  // ! HISTOGRAM criar _bucket _count _sum
+  const histogram = metric.createHistogram("request-duration");
+  histogram.record(1000);
 
   return res.status(200).json({ message: "Metric added!" });
 });
