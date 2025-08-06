@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { createServer } from "http";
 import { metrics } from "./tracer";
+import { log } from "./infra/logger";
 
 const app = express();
 const server = createServer(app);
@@ -13,6 +14,8 @@ app.get("/health", (req, res) => {
   const metric = metrics.getMeter("app-rocketseat");
   const successMetric = metric.createCounter("hello-success");
   successMetric.add(1);
+
+  log.info("Health check endpoint hit");
 
   res.send("Hello, World!");
 });
